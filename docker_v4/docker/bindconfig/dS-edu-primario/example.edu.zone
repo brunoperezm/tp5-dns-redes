@@ -1,0 +1,31 @@
+$TTL 1h
+; -----------------------------------------------------------------------------
+; SOA for example.edu      si no anda cambia contact por admin
+; -----------------------------------------------------------------------------
+
+@ IN SOA dS-edu-primario.example.edu admin.example.edu. (
+            2016021501      ; Serial
+            1h              ; Refresh
+            15m             ; Retry
+            1d              ; Expire
+            1h );           ; Negative Cache TTL
+
+; -----------------------------------------------------------------------------
+; zone records
+; -----------------------------------------------------------------------------
+example.edu.        1800    IN    NS        dS-edu-primario.example.edu.
+example.edu.        1800    IN    NS        dS-edu-secundario.example.edu.
+
+; -----------------------------------------------------------------------------
+; pointer records
+; -----------------------------------------------------------------------------
+www                 1800    IN    A         192.168.2.50
+dS-edu-primario.example.edu.    IN  A   19.19.18.9
+dS-edu-secundario.example.edu.  IN  A   19.19.18.10
+host1.example.edu.   IN  A   19.19.18.8
+host2.example.edu.   IN  A   19.19.18.7
+
+; -----------------------------------------------------------------------------
+; cname records
+; -----------------------------------------------------------------------------
+webmail             3600    IN    CNAME     www.example.edu.

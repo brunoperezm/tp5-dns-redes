@@ -1,0 +1,141 @@
+version: '3.1'
+services:
+#ZONA COM
+  dnsprimariocom:
+    build: 
+      dockerfile: images/dns.dockerfile
+      context: .
+    volumes:
+      - ./bindconfig/dS-com/:/etc/bind:ro
+      #montamos ns1 dentro etc/bind en modo read only
+    #ports:
+    #  - "53:53/tcp"
+    networks:
+      dns-com:
+        ipv4_address: 19.19.19.9
+        #La direccion  para nosotro montar en resol conf  le va decir  a nuestro host donde encontrar los nserver
+  
+  host3: 
+    build:
+      dockerfile: images/host.dockerfile
+      context: .
+    volumes: 
+      - ./resolv.conf:/etc/resolv.conf:ro
+      #Montamos resolv.conf(le dice a nuestro host los ns) un resolv conf con un ip fija o sea conocido
+    command: tail -f /dev/null
+    networks:
+      dns-com:
+        ipv4_address: 19.19.19.8
+
+ 
+ #ZONA EDU
+  dnsprimarioedu:
+    build: 
+      dockerfile: images/dns.dockerfile
+      context: .
+    volumes:
+      - ./bindconfig/dS-edu-primario/:/etc/bind:ro
+      #Lo que hacemos  es lo que esta en ns1 lo montamos dentro etc bind en modo read only
+    #ports:
+    #  - "53:53/tcp"
+    networks:
+      dns-edu:
+        ipv4_address: 19.19.18.9
+        #La direccion  para nosotro montar en resol conf  le va decir  a nuestro host donde encontrar los nserver
+
+  dnsecundarioedu:
+    build: 
+      dockerfile: images/dns.dockerfile
+      context: .
+    volumes:
+      - ./bindconfig/dS-edu-secundario/:/etc/bind:ro
+      #Lo que hacemos  es lo que esta en ns1 lo montamos dentro etc bind en modo read only
+    #ports:
+    #  - "53:53/tcp"
+    networks:
+      dns-edu:
+        ipv4_address: 19.19.18.10
+        #La direccion  para nosotro montar en resol conf  le va decir  a nuestro host donde encontrar los nserver
+  dnsroot2:
+    build: 
+      dockerfile: images/dns.dockerfile
+      context: .
+    volumes:
+      - ./bindconfig/dS-root-2/:/etc/bind:ro
+      #Lo que hacemos  es lo que esta en ns1 lo montamos dentro etc bind en modo read only
+    #ports:
+    #  - "53:53/tcp"
+    networks:
+      dns-root:
+        ipv4_address: 19.19.17.9
+        #La direccion  para nosotro montar en resol conf  le va decir  a nuestro host donde encontrar los nserver
+
+  host1: 
+    build:
+      dockerfile: images/host.dockerfile
+      context: .
+    volumes: 
+      - ./resolv2.conf:/etc/resolv.conf:ro
+      #Montamos resolv.conf(le dice a nuestro host los ns) un resolv conf con un ip fija o sea conocido
+    command: tail -f /dev/null
+    networks:
+      dns-edu:
+        ipv4_address: 19.19.18.8
+        
+  host2: 
+    build:
+      dockerfile: images/host.dockerfile
+      context: .
+    volumes: 
+      - ./resolv2.conf:/etc/resolv.conf:ro
+      #Montamos resolv.conf(le dice a nuestro host los ns) un resolv conf con un ip fija o sea conocido
+    command: tail -f /dev/null
+    networks:
+      dns-edu:
+        ipv4_address: 19.19.18.7
+
+
+#ROUTER  
+  r1:
+    build: .
+    volumes:
+      - ./volumes/quagga/r1/zebra.conf:/etc/quagga/zebra.conf:ro
+      - ./volumes/quagga/r1/ospfd.conf:/etc/quagga/ospfd.conf:ro
+      - ./volumes/supervisord.conf:/etc/supervisord.conf:ro
+    image: ospf:20190321
+    privileged: true
+    ports:
+      #admin
+      - 10011:2601
+      #ospf
+      - 10012:2604
+
+    networks:
+      dns-com:
+        ipv4_address: 19.19.19.2
+      dns-edu:
+        ipv4_address: 19.19.18.2
+      dns-root:
+        ipv4_address: 19.19.17.2
+#------------------------------------------  
+
+#REDES
+networks:
+  dns-com:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 19.19.19.0/24
+  dns-edu:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 19.19.18.0/24
+  dns-root:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 19.19.17.0/24
