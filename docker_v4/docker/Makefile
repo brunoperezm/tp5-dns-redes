@@ -14,7 +14,7 @@ delete_routes:
 	docker exec -ti --privileged docker_dnsprimariocom_1 ip route del default via 19.19.19.1;
 	docker exec -ti --privileged docker_dnsprimarioedu_1 ip route del default via 19.19.18.1;
 	docker exec -ti --privileged docker_dnsecundarioedu_1 ip route del default via 19.19.18.1;
-	#docker exec -ti --privileged docker_dnsroot_1 ip route del default via 19.19.17.1;
+	docker exec -ti --privileged docker_dnsroot2_1 ip route del default via 19.19.17.1;
 
 conf_routes:
 	docker exec -ti --privileged docker_host1_1 ip route add default via 19.19.18.2;
@@ -23,4 +23,4 @@ conf_routes:
 	docker exec -ti --privileged docker_dnsprimariocom_1 ip route add default via 19.19.19.2;
 	docker exec -ti --privileged docker_dnsprimarioedu_1 ip route add default via 19.19.18.2;
 	docker exec -ti --privileged docker_dnsecundarioedu_1 ip route add default via 19.19.18.2;
-	#docker exec -ti --privileged docker_dnsroot_1 ip route add default via 19.19.17.2;
+	docker exec -ti --privileged docker_dnsroot2_1 ip route add default via 19.19.17.2;
