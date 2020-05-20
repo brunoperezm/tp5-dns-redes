@@ -5,9 +5,8 @@ from flask import Flask,abort,render_template,Response,request
 app = Flask(__name__)
 
 alumnosDb = {
-    1 : "Julian benso",
-    2 : "Pichichi depetris",
-    3 : "Brunito pe"
+    1 : "Jere Benitez",
+    2 : "Brunito pe"
 }
 
 
