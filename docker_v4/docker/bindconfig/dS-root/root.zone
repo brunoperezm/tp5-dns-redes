@@ -3,8 +3,8 @@ $TTL 1h
 ; SOA for example.com
 ; -----------------------------------------------------------------------------
 
-@ IN SOA dS-root.. contact.. (
-            2016021501      ; Serial
+@ IN SOA dns.root root. (
+            2016021503      ; Serial
             1h              ; Refresh
             15m             ; Retry
             1d              ; Expire
@@ -13,20 +13,19 @@ $TTL 1h
 ; -----------------------------------------------------------------------------
 ; zone records
 ; -----------------------------------------------------------------------------
-example.edu.        1800    IN    NS        dS-edu-primario.example.edu.
-example.edu.        1800    IN    NS        dS-edu-secundario.example.edu.
-example.com.        1800    IN    NS        dS-com.example.com.
+@                   IN  NS  dns.root.
+example.com.        IN  NS  ns.example.com.
+example.edu.        IN  NS  ns1.example.edu.
+example.edu.        IN  NS  ns2.example.edu.
+
 ; -----------------------------------------------------------------------------
 ; pointer records
 ; -----------------------------------------------------------------------------
-;www                 1800    IN    A         192.168.2.50
-;www                 1800    IN    A         192.168.1.50
-;dS-edu-primario.example.edu.    IN  A       19.19.18.9
-;dS-edu-secundario.example.edu.  IN  A       19.19.18.10
-;host1.example.edu.   IN           A         19.19.18.8
-;host2.example.edu.   IN  A                  19.19.18.7
+dns.root.           IN  A   19.19.17.9
+ns.example.com.     IN  A   19.19.19.9
+ns1.example.edu.     IN  A   19.19.18.9
+ns2.example.edu.     IN  A   19.19.18.10
 
 ; -----------------------------------------------------------------------------
 ; cname records
 ; -----------------------------------------------------------------------------
-;webmail             3600    IN    CNAME     www.example.com.
